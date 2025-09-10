@@ -25,7 +25,6 @@ The portal supports managing sailing race events, including multiple races and c
 1. Install [.NET SDK](https://dotnet.microsoft.com/download) (version 7 or later recommended).
 2. Clone the repository and navigate to the project folder.
 3. Run the project with:
-
 `dotnet run`
 4. Open a browser and navigate to `https://localhost:5001` (or the URL shown in the console).
 

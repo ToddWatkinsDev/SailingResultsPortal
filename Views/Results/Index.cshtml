@@ -2,9 +2,22 @@
 
 @{
     ViewData["Title"] = "Results";
-    string raceId = Context.Request.Query["raceId"];
-    string classId = Context.Request.Query["classId"];
+    string raceId = Context.Request.Query["raceId"].ToString() ?? string.Empty;
+    string classId = Context.Request.Query["classId"].ToString() ?? string.Empty;
+    string eventId = ViewData["EventId"] as string ?? ""; // Ideally pass this from controller
 }
+
+<nav class="text-sm text-gray-600 mb-4" aria-label="Breadcrumb">
+    <ol class="list-reset flex">
+        <li><a href="/Events" class="hover:underline">Events</a></li>
+        <li><span class="mx-2">/</span></li>
+        <li><a href="/Events/Races?eventId=@eventId" class="hover:underline">Races</a></li>
+        <li><span class="mx-2">/</span></li>
+        <li><a href="/Events/Classes?eventId=@eventId&raceId=@raceId" class="hover:underline">Classes</a></li>
+        <li><span class="mx-2">/</span></li>
+        <li>Results</li>
+    </ol>
+</nav>
 
 <h1 class="text-2xl font-bold mb-4">Results</h1>
 
@@ -14,10 +27,11 @@
 <table class="w-full border-collapse border border-gray-300">
     <thead>
         <tr class="bg-gray-200">
-            <th class="border border-gray-300 p-2">Position</th>
+            <th class="border border-gray-300 p-2 text-center">Position</th>
             <th class="border border-gray-300 p-2">Sailor Name</th>
-            <th class="border border-gray-300 p-2">Finish Time</th>
-            <th class="border border-gray-300 p-2">Corrected Time</th>
+            <th class="border border-gray-300 p-2">Sail Number</th>
+            <th class="border border-gray-300 p-2 text-center">Finish Time</th>
+            <th class="border border-gray-300 p-2 text-center">Corrected Time</th>
         </tr>
     </thead>
     <tbody>
@@ -26,6 +40,7 @@
             <tr>
                 <td class="border border-gray-300 p-2 text-center">@result.Position</td>
                 <td class="border border-gray-300 p-2">@result.SailorName</td>
+                <td class="border border-gray-300 p-2">@result.SailNumber</td>
                 <td class="border border-gray-300 p-2 text-center">@result.FinishTime.ToString(@"hh\:mm\:ss")</td>
                 <td class="border border-gray-300 p-2 text-center">@result.CorrectedTime:F2</td>
             </tr>

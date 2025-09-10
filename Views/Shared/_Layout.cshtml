@@ -2,31 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Sailing Results Portal</title>
+    <title>@ViewData["Title"] - Sailing Results Portal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-900">
+<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+
     <header class="bg-blue-800 text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="/" class="font-bold text-xl">Sailing Results Portal</a>
+            <a href="/" class="font-bold text-xl hover:underline">Sailing Results Portal</a>
+
+            <nav class="space-x-4">
+                <a href="/Events" class="hover:underline">Events</a>
+            </nav>
+
             <partial name="_LoginPartial" />
         </div>
     </header>
 
-    <main class="container mx-auto p-4">
+    <main class="container mx-auto p-4 flex-grow">
         @RenderBody()
     </main>
 
     <footer class="bg-blue-800 text-white text-center p-4 mt-8">
-        &copy; 2025 Sailing Results Portal
+        &copy; @DateTime.Now.Year Sailing Results Portal
     </footer>
 
     @RenderSection("Scripts", required: false)
 </body>
 </html>
-```
-    Main layout file for the Sailing Results Portal application.
-    This layout uses Tailwind CSS for styling and includes a header, footer, and a section for rendering body content.
-```

@@ -5,17 +5,27 @@
     string eventId = Model.Id;
 }
 
+<nav class="text-sm text-gray-600 mb-4" aria-label="Breadcrumb">
+    <ol class="list-reset flex">
+        <li><a href="/Events" class="hover:underline">Events</a></li>
+        <li><span class="mx-2">/</span></li>
+        <li>@Model.Name</li>
+    </ol>
+</nav>
+
 <h1 class="text-2xl font-bold mb-4">Races for @Model.Name</h1>
 
 <a href="/Events/CreateRace?eventId=@eventId" 
-    class="inline-block mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">+ New Race</a>
+   class="inline-block mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">+ New Race</a>
 
 <table class="w-full border-collapse border border-gray-300">
     <thead>
         <tr class="bg-gray-200">
             <th class="border border-gray-300 p-2 text-left">Name</th>
-            <th class="border border-gray-300 p-2">Classes</th>
-            <th class="border border-gray-300 p-2">Actions</th>
+            <th class="border border-gray-300 p-2 text-center">Handicap System</th>
+            <th class="border border-gray-300 p-2 text-center">Handicap Type</th>
+            <th class="border border-gray-300 p-2 text-center">Classes</th>
+            <th class="border border-gray-300 p-2 text-center">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -23,11 +33,13 @@
         {
             <tr>
                 <td class="border border-gray-300 p-2">@race.Name</td>
+                <td class="border border-gray-300 p-2 text-center">@race.HandicapSystem</td>
+                <td class="border border-gray-300 p-2 text-center">@race.HandicapType</td>
                 <td class="border border-gray-300 p-2 text-center">
                     <a href="/Events/Classes?eventId=@eventId&raceId=@race.Id" class="text-blue-600 hover:underline">View Classes (@race.Classes.Count)</a>
                 </td>
                 <td class="border border-gray-300 p-2 text-center">
-                    <!-- TODO: Add race edit/delete -->
+                    <a href="/Events/EditRace?eventId=@eventId&raceId=@race.Id" class="text-blue-600 hover:underline">Edit</a>
                 </td>
             </tr>
         }

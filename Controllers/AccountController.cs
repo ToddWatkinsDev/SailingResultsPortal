@@ -17,12 +17,14 @@ namespace SailingResultsPortal.Controllers
 
         // POST: /Account/Login
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string username, string password)
         {
-            // Simple user validation (replace with a real user store or JSON user file)
+            // Simple user validation (replace with real user store or JSON user file)
             if (username == "admin" && password == "P@ssword1")
             {
-                var claims = new[] {
+                var claims = new[]
+                {
                     new Claim(ClaimTypes.Name, username),
                     new Claim(ClaimTypes.Role, "Sudo"),
                 };
@@ -40,6 +42,7 @@ namespace SailingResultsPortal.Controllers
 
         // POST: /Account/Logout
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

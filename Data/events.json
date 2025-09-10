@@ -1,0 +1,34 @@
+[
+  {
+    "Id": "6e9e1c8d-0050-465e-8186-d49b2e982f5a",
+    "Name": "Test",
+    "Races": [
+      {
+        "Id": "8be16afd-fc5a-49f3-a467-119c4b57685c",
+        "Name": "Open",
+        "HandicapType": "Open",
+        "HandicapSystem": "Portsmouth",
+        "Classes": [
+          {
+            "Id": "036741e5-1106-46c4-9880-a740c4c34ae6",
+            "Name": "Fast",
+            "ScoringMethod": "Portsmouth",
+            "Rating": 1
+          }
+        ]
+      },
+      {
+        "Id": "30aca269-8208-4a1c-a810-3a435af4f2a4",
+        "Name": "1Design",
+        "HandicapType": "OneDesign",
+        "HandicapSystem": "Portsmouth",
+        "Classes": []
+      }
+    ]
+  },
+  {
+    "Id": "050b7f23-8ce9-422e-a172-bbb3985334a7",
+    "Name": "Test2",
+    "Races": []
+  }
+]

@@ -21,9 +21,10 @@ namespace SailingResultsPortal.Helpers
         {
             string filePath = Path.Combine(DataFolder, fileName);
             var options = new JsonSerializerOptions { WriteIndented = true };
-            using FileStream createStream = File.Create(filePath);
+
+            await using FileStream createStream = File.Create(filePath);
             await JsonSerializer.SerializeAsync(createStream, data, options);
-            await createStream.DisposeAsync();
+            // 'await using' ensures DisposeAsync is called automatically
         }
 
         public static async Task<List<T>> LoadAsync<T>(string fileName)
@@ -33,7 +34,8 @@ namespace SailingResultsPortal.Helpers
             {
                 return new List<T>();
             }
-            using FileStream openStream = File.OpenRead(filePath);
+
+            await using FileStream openStream = File.OpenRead(filePath);
             return await JsonSerializer.DeserializeAsync<List<T>>(openStream) ?? new List<T>();
         }
     }

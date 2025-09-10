@@ -5,22 +5,18 @@
 <div class="max-w-md mx-auto mt-20 p-6 bg-white rounded shadow">
     <h2 class="text-xl mb-4 font-semibold">Login</h2>
 
-    <form method="post">
-        <label class="block mb-2 font-medium">Username</label>
-        <input type="text" name="username" class="w-full p-2 border rounded mb-4" required />
+    <form method="post" asp-action="Login">
+        <label class="block mb-2 font-medium" for="username">Username</label>
+        <input type="text" id="username" name="username" class="w-full p-2 border rounded mb-4" required />
 
-        <label class="block mb-2 font-medium">Password</label>
-        <input type="password" name="password" class="w-full p-2 border rounded mb-4" required />
+        <label class="block mb-2 font-medium" for="password">Password</label>
+        <input type="password" id="password" name="password" class="w-full p-2 border rounded mb-4" required />
 
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Login</button>
 
-        @if(ViewBag.Message != null)
+        @if (ViewBag.Message != null)
         {
             <p class="mt-4 text-red-600">@ViewBag.Message</p>
         }
     </form>
 </div>
-```
-    Login page for the Sailing Results Portal application.
-    Contains a form for username and password input, styled with Tailwind CSS.
-```

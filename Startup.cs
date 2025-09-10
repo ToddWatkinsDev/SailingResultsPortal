@@ -19,6 +19,9 @@ namespace SailingResultsPortal
         {
             services.AddControllersWithViews();
 
+            // Register IHttpContextAccessor for dependency injection
+            services.AddHttpContextAccessor();
+
             // Setup cookie-based authentication
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -34,14 +37,15 @@ namespace SailingResultsPortal
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                // No HTTPS redirection in development to avoid warnings
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
-            }
 
-            app.UseHttpsRedirection();
+                app.UseHttpsRedirection();
+            }
 
             app.UseStaticFiles();
 

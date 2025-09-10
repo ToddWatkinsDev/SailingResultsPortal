@@ -1,0 +1,53 @@
+# Sailing Results Portal
+
+This is a **web-based sailing results management portal** built with **ASP.NET Core MVC** and styled with **Tailwind CSS**. 
+
+## Purpose
+
+The portal supports managing sailing race events, including multiple races and classes, with a focus on dinghies and yachts scored using Portsmouth Yardstick, IRC, and YTC handicap systems.
+
+## Key Features
+
+- Manage multiple **Events**, each containing multiple **Races**, which in turn have multiple **Classes**.
+- Enter and display **race results** with raw finish times and handicap-corrected scores.
+- Role-based authentication with four user types:
+  - **Sudo**: Full access.
+  - **Event Organiser**: Can manage events, races, classes, and results.
+  - **Race Official**: Can upload and query results.
+  - **User**: View results without login.
+- File-based JSON data storage to avoid dependencies on traditional databases.
+- Results export/import possible via JSON files (to be implemented).
+- Server-rendered pages for broad compatibility and performance.
+- Tailwind CSS for responsive and modern styling using CDN (no Node.js build required).
+
+## Setup
+
+1. Install [.NET SDK](https://dotnet.microsoft.com/download) (version 7 or later recommended).
+2. Clone the repository and navigate to the project folder.
+3. Run the project with:
+`dotnet run`
+4. Open a browser and navigate to `https://localhost:5001` (or the URL shown in the console).
+
+5. Login as `admin` with password `P@ssword1` for full access.
+
+## Usage
+
+- Create events and add races and classes using the web interface (for authorised users).
+- Enter race results with finish times; handicap scoring calculations will be applied.
+- View results and navigate through events, races, and classes as non-authenticated users.
+
+## TODO
+
+- Implement proper user management and registration.
+- Add scoring algorithms for Portsmouth, IRC, and YTC.
+- Export/import results in JSON and human-readable formats.
+- Add editing and deleting of races, classes, and results.
+- Improve UI/UX and validation logic.
+
+## License
+
+MIT License (or your preferred license)
+
+---
+
+This portal provides a streamlined, open-source solution to manage sailing race results efficiently without requiring complex database setups.

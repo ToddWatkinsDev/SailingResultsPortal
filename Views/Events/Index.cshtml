@@ -1,0 +1,33 @@
+@model List<SailingResultsPortal.Models.Event>
+
+@{
+    ViewData["Title"] = "Events";
+}
+
+<h1 class="text-2xl font-bold mb-4">Sailing Events</h1>
+
+<a href="/Events/Create" class="inline-block mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">+ New Event</a>
+
+<table class="w-full border-collapse border border-gray-300">
+    <thead>
+        <tr class="bg-gray-200">
+            <th class="border border-gray-300 p-2 text-left">Name</th>
+            <th class="border border-gray-300 p-2">Races</th>
+            <th class="border border-gray-300 p-2">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ev in Model)
+        {
+            <tr>
+                <td class="border border-gray-300 p-2">@ev.Name</td>
+                <td class="border border-gray-300 p-2 text-center">
+                    <a href="/Events/Races?eventId=@ev.Id" class="text-blue-600 hover:underline">View Races (@ev.Races.Count)</a>
+                </td>
+                <td class="border border-gray-300 p-2 text-center">
+                    <a href="/Events/Edit/@ev.Id" class="text-blue-600 hover:underline">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

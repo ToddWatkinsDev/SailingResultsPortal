@@ -1,0 +1,23 @@
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+<div>
+@{
+    var user = HttpContextAccessor.HttpContext.User;
+    if (user.Identity.IsAuthenticated)
+    {
+        <span>Welcome, @user.Identity.Name</span>
+        <form method="post" asp-controller="Account" asp-action="Logout" class="inline ml-4">
+            <button type="submit" class="underline">Logout</button>
+        </form>
+    }
+    else
+    {
+        <a href="/Account/Login" class="underline">Login</a>
+    }
+}
+</div>
+```
+    Partial view for login/logout functionality.
+    Displays a welcome message and logout button if the user is authenticated, otherwise shows a login link.
+```

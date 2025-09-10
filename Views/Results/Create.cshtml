@@ -1,0 +1,22 @@
+@model SailingResultsPortal.Models.Result
+
+@{
+    ViewData["Title"] = "Add Result";
+}
+
+<h1 class="text-2xl font-bold mb-4">Add Result</h1>
+
+<form method="post" class="max-w-md bg-white rounded shadow p-6">
+    <input type="hidden" asp-for="RaceId" />
+    <input type="hidden" asp-for="ClassId" />
+
+    <label class="block mb-2 font-semibold" for="SailorName">Sailor Name</label>
+    <input asp-for="SailorName" id="SailorName" name="SailorName" class="w-full mb-4 p-2 border rounded" required />
+
+    <label class="block mb-2 font-semibold" for="finishTimeInput">Finish Time (hh:mm:ss)</label>
+    <input type="text" id="finishTimeInput" name="finishTimeInput" class="w-full mb-4 p-2 border rounded" placeholder="e.g. 01:23:45" required />
+
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Result</button>
+    <a href="@Url.Action("Index", new { raceId = Model.RaceId, classId = Model.ClassId })" class="ml-4 underline">Cancel</a>
+</form>
+

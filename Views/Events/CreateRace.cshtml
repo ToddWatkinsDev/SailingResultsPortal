@@ -1,0 +1,16 @@
+@model SailingResultsPortal.Models.Race
+
+@{
+    ViewData["Title"] = "Create Race";
+    var eventId = ViewData["EventId"] as string;
+}
+
+<h1 class="text-2xl font-bold mb-4">Create New Race</h1>
+
+<form method="post" asp-action="CreateRace" asp-route-eventId="@eventId" class="max-w-md bg-white rounded shadow p-6">
+    <label class="block mb-2 font-semibold" for="Name">Race Name</label>
+    <input asp-for="Name" id="Name" name="Name" class="w-full mb-4 p-2 border rounded" required />
+
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Create</button>
+    <a href="/Events/Races?eventId=@eventId" class="ml-4 underline">Cancel</a>
+</form>

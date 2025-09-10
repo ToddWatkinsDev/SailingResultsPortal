@@ -1,0 +1,25 @@
+@model SailingResultsPortal.Models.Class
+
+@{
+    ViewData["Title"] = "Create Class";
+    var eventId = ViewData["EventId"] as string;
+    var raceId = ViewData["RaceId"] as string;
+}
+
+<h1 class="text-2xl font-bold mb-4">Create New Class</h1>
+
+<form method="post" asp-action="CreateClass" asp-route-eventId="@eventId" asp-route-raceId="@raceId" class="max-w-md bg-white rounded shadow p-6">
+    <label class="block mb-2 font-semibold" for="Name">Class Name</label>
+    <input asp-for="Name" id="Name" name="Name" class="w-full mb-4 p-2 border rounded" required />
+
+    <label class="block mb-2 font-semibold" for="ScoringMethod">Scoring Method</label>
+    <select asp-for="ScoringMethod" id="ScoringMethod" name="ScoringMethod" class="w-full mb-4 p-2 border rounded" required>
+        <option value="">Select</option>
+        <option value="Portsmouth">Portsmouth (Dinghy)</option>
+        <option value="IRC">IRC (Yacht)</option>
+        <option value="YTC">YTC (Yacht)</option>
+    </select>
+
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Create</button>
+    <a href="/Events/Classes?eventId=@eventId&raceId=@raceId" class="ml-4 underline">Cancel</a>
+</form>

@@ -1,0 +1,37 @@
+@model SailingResultsPortal.Models.Event
+
+@{
+    ViewData["Title"] = "Races of " + Model.Name;
+    string eventId = Model.Id;
+}
+
+<h1 class="text-2xl font-bold mb-4">Races for @Model.Name</h1>
+
+<a href="/Events/CreateRace?eventId=@eventId" 
+    class="inline-block mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">+ New Race</a>
+
+<table class="w-full border-collapse border border-gray-300">
+    <thead>
+        <tr class="bg-gray-200">
+            <th class="border border-gray-300 p-2 text-left">Name</th>
+            <th class="border border-gray-300 p-2">Classes</th>
+            <th class="border border-gray-300 p-2">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var race in Model.Races)
+        {
+            <tr>
+                <td class="border border-gray-300 p-2">@race.Name</td>
+                <td class="border border-gray-300 p-2 text-center">
+                    <a href="/Events/Classes?eventId=@eventId&raceId=@race.Id" class="text-blue-600 hover:underline">View Classes (@race.Classes.Count)</a>
+                </td>
+                <td class="border border-gray-300 p-2 text-center">
+                    <!-- TODO: Add race edit/delete -->
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p><a href="/Events" class="underline">Back to Events</a></p>

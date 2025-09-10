@@ -1,0 +1,36 @@
+@model SailingResultsPortal.Models.Race
+
+@{
+    ViewData["Title"] = "Classes of " + Model.Name;
+    string eventId = ViewData["EventId"] as string;
+    string raceId = ViewData["RaceId"] as string;
+}
+
+<h1 class="text-2xl font-bold mb-4">Classes in @Model.Name</h1>
+
+<a href="/Events/CreateClass?eventId=@eventId&raceId=@raceId" 
+    class="inline-block mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">+ New Class</a>
+
+<table class="w-full border-collapse border border-gray-300">
+    <thead>
+        <tr class="bg-gray-200">
+            <th class="border border-gray-300 p-2 text-left">Name</th>
+            <th class="border border-gray-300 p-2 text-center">Scoring Method</th>
+            <th class="border border-gray-300 p-2 text-center">Results</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cls in Model.Classes)
+        {
+            <tr>
+                <td class="border border-gray-300 p-2">@cls.Name</td>
+                <td class="border border-gray-300 p-2 text-center">@cls.ScoringMethod</td>
+                <td class="border border-gray-300 p-2 text-center">
+                    <a href="/Results?raceId=@raceId&classId=@cls.Id" class="text-blue-600 hover:underline">View Results</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p><a href="/Events/Races?eventId=@eventId" class="underline">Back to Races</a></p>

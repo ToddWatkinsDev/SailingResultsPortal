@@ -1,0 +1,8 @@
+dotnet new mvc -n SailingResultsPortal
+cd SailingResultsPortal
+
+# Add authentication scaffold (cookie based simple authentication)
+dotnet add package Microsoft.AspNetCore.Authentication.Cookies
+
+# Optional: Add JSON serialization package (comes by default in .NET 6+)
+dotnet add package System.Text.Json

@@ -1,0 +1,234 @@
+@{
+    ViewData["Title"] = "Event Overview";
+    var eventId = ViewData["EventId"] as string ?? "";
+    var ev = ViewData["Event"] as SailingResultsPortal.Models.Event;
+    var classOverview = ViewData["ClassOverview"] as Dictionary<string, Dictionary<string, List<SailingResultsPortal.Models.Result>>> ?? new Dictionary<string, Dictionary<string, List<SailingResultsPortal.Models.Result>>>();
+    var classStandings = ViewData["ClassStandings"] as Dictionary<string, List<(string SailorName, int TotalPoints, List<(string RaceName, int Points)> RaceBreakdown)>> ?? new Dictionary<string, List<(string, int, List<(string, int)>)>>();
+}
+
+<!-- TODO: Add official branding input system for custom logos, colors, and styling -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - @ev?.Name</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-shadow { box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.15); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                            <i data-lucide="sailboat" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <span class="font-bold text-xl text-gray-900">Sailing Portal</span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/Results/Public" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        Events
+                    </a>
+                    @if (User?.Identity?.IsAuthenticated ?? false)
+                    {
+                        <a href="/Events" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            Manage
+                        </a>
+                    }
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="gradient-bg text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">@ev?.Name</h1>
+                <p class="text-xl md:text-2xl opacity-90 mb-8">Event Overview & Class Standings</p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="/Results/Public?eventId=@eventId" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors inline-flex items-center">
+                        <i data-lucide="list" class="w-5 h-5 mr-2"></i>
+                        Race Results
+                    </a>
+                    <a href="/Results/Overall?eventId=@eventId" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors inline-flex items-center">
+                        <i data-lucide="trophy" class="w-5 h-5 mr-2"></i>
+                        Overall Standings
+                    </a>
+                    <a href="/Results/ExportCsv?eventId=@eventId" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors inline-flex items-center">
+                        <i data-lucide="download" class="w-5 h-5 mr-2"></i>
+                        Export CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        @if (classOverview.Any())
+        {
+            @foreach (var classEntry in classOverview.OrderBy(c => c.Key))
+            {
+                var className = classEntry.Key;
+                var raceData = classEntry.Value;
+                var standings = classStandings.ContainsKey(className) ? classStandings[className] : new List<(string, int, List<(string, int)>)>();
+
+                <!-- Class Section -->
+                <div class="mb-12">
+                    <div class="bg-white rounded-xl card-shadow hover-lift p-8">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                                <i data-lucide="users" class="w-6 h-6 text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-3xl font-bold text-gray-900">@className</h2>
+                                <p class="text-gray-600">@raceData.Count race@(raceData.Count > 1 ? "s" : "") completed</p>
+                            </div>
+                        </div>
+
+                        <!-- Race Results Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                            @foreach (var raceEntry in raceData.OrderBy(r => r.Key))
+                            {
+                                var raceName = raceEntry.Key;
+                                var results = raceEntry.Value.OrderBy(r => r.Position).Take(3).ToList();
+
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <h3 class="font-semibold text-gray-900 mb-3">@raceName</h3>
+                                    <div class="space-y-2">
+                                        @foreach (var result in results)
+                                        {
+                                            var medalClass = result.Position == 1 ? "text-yellow-600" :
+                                                           result.Position == 2 ? "text-gray-400" :
+                                                           result.Position == 3 ? "text-amber-600" : "text-gray-600";
+                                            <div class="flex justify-between items-center">
+                                                <span class="text-sm @medalClass font-medium">
+                                                    @result.Position. @result.SailorName
+                                                </span>
+                                                <span class="text-sm text-gray-500">@result.Points pts</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Overall Standings -->
+                        @if (standings.Any())
+                        {
+                            <div class="border-t border-gray-200 pt-6">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                                    <i data-lucide="trophy" class="w-5 h-5 mr-2 text-yellow-500"></i>
+                                    Overall Standings
+                                </h3>
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full divide-y divide-gray-200">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sailor</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Points</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Race Breakdown</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+                                            @foreach (var (position, standing) in standings.Select((s, i) => (i + 1, s)))
+                                            {
+                                                var (sailorName, totalPoints, raceBreakdown) = standing;
+                                                var positionClass = position == 1 ? "bg-yellow-50" :
+                                                                  position == 2 ? "bg-gray-50" :
+                                                                  position == 3 ? "bg-amber-50" : "";
+                                                <tr class="@positionClass">
+                                                    <td class="px-6 py-4 whitespace-nowrap">
+                                                        <div class="flex items-center">
+                                                            @if (position <= 3)
+                                                            {
+                                                                var medalIcon = position == 1 ? "medal" :
+                                                                              position == 2 ? "medal" :
+                                                                              "award";
+                                                                var medalColor = position == 1 ? "text-yellow-500" :
+                                                                               position == 2 ? "text-gray-400" :
+                                                                               "text-amber-600";
+                                                                <i data-lucide="@medalIcon" class="w-5 h-5 @medalColor mr-2"></i>
+                                                            }
+                                                            <span class="text-sm font-medium text-gray-900">@position</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">@sailorName</td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">@totalPoints</td>
+                                                    <td class="px-6 py-4 text-sm text-gray-500">
+                                                        <div class="flex flex-wrap gap-1">
+                                                            @foreach (var raceDetail in raceBreakdown.OrderBy(r => r.Item1))
+                                                            {
+                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                    @raceDetail.Item1: @raceDetail.Item2
+                                                                </span>
+                                                            }
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <!-- No Results State -->
+            <div class="text-center py-16">
+                <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="sailboat" class="w-12 h-12 text-gray-400"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-900 mb-2">No Results Yet</h3>
+                <p class="text-gray-600 mb-6">Results will appear here once races are completed.</p>
+                <a href="/Results/Public?eventId=@eventId" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-flex items-center">
+                    <i data-lucide="arrow-left" class="w-5 h-5 mr-2"></i>
+                    View Race Results
+                </a>
+            </div>
+        }
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <i data-lucide="sailboat" class="w-6 h-6"></i>
+                    <span class="font-semibold">Sailing Results Portal</span>
+                </div>
+                <div class="text-sm text-gray-400">
+                    © @DateTime.Now.Year Sailing Results Portal. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

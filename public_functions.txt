@@ -1,0 +1,478 @@
+================================================================================
+SAILING RESULTS PORTAL - PUBLIC FUNCTIONS & METHODS DOCUMENTATION
+================================================================================
+Last Updated: 2025-09-10
+Project: ASP.NET Core MVC Sailing Results Management System
+
+================================================================================
+CONTROLLERS
+================================================================================
+
+Controllers/AccountController.cs:
+--------------------------------------------------------------------------------
+- Login (GET): IActionResult
+  Displays the login form view for user authentication.
+
+- Login (POST): async Task<IActionResult>
+  Authenticates user with username/password, handles backdoor admin login,
+  creates authentication claims, and signs in the user.
+
+- Register (GET): IActionResult
+  Displays the user registration form view.
+
+- Register (POST): async Task<IActionResult>
+  Creates new user account, hashes password, validates uniqueness,
+  and redirects to login on success.
+
+- Logout (POST): async Task<IActionResult>
+  Signs out the current user and redirects to home page.
+
+Controllers/EventsController.cs:
+--------------------------------------------------------------------------------
+- Index: async Task<IActionResult>
+  Displays list of all events with caching support.
+
+- Create (GET): IActionResult
+  Displays form to create new sailing event.
+
+- Create (POST): async Task<IActionResult>
+  Validates and creates new event, assigns GUID, initializes empty collections.
+
+- Edit (GET): async Task<IActionResult>
+  Displays form to edit existing event by ID.
+
+- Edit (POST): async Task<IActionResult>
+  Updates event properties (name, discard settings) and saves changes.
+
+- Races: async Task<IActionResult>
+  Displays all races for a specific event.
+
+- CreateRace (GET): IActionResult
+  Displays form to create new race with default handicap settings.
+
+- CreateRace (POST): async Task<IActionResult>
+  Creates new race, assigns GUID, initializes empty classes collection.
+
+- EditRace (GET): async Task<IActionResult>
+  Displays form to edit existing race properties.
+
+- EditRace (POST): async Task<IActionResult>
+  Updates race handicap settings and saves changes.
+
+- Classes: async Task<IActionResult>
+  Displays all classes for a specific race within an event.
+
+- CreateClass (GET): IActionResult
+  Displays form to create new class with default Portsmouth scoring.
+
+- CreateClass (POST): async Task<IActionResult>
+  Creates new class, assigns GUID, adds to race's classes collection.
+
+- DeleteClass (POST): async Task<IActionResult>
+  Removes class from race and updates storage.
+
+- Team: async Task<IActionResult>
+  Displays team management interface for event organizers.
+
+- AddTeamMember (POST): async Task<IActionResult>
+  Adds user to event's team members list.
+
+- RemoveTeamMember (POST): async Task<IActionResult>
+  Removes user from event's team members list.
+
+- TogglePrivacy (POST): async Task<IActionResult>
+  Toggles event between public and private visibility.
+
+- AddAllowedUser (POST): async Task<IActionResult>
+  Grants specific user access to private event.
+
+- RemoveAllowedUser (POST): async Task<IActionResult>
+  Revokes user access to private event.
+
+Controllers/HomeController.cs:
+--------------------------------------------------------------------------------
+- Index: IActionResult
+  Displays the main landing page with hero section and feature highlights.
+
+- Privacy: IActionResult
+  Displays the privacy policy page.
+
+- Error: IActionResult
+  Displays error page with request details and debugging information.
+
+Controllers/ResultsController.cs:
+--------------------------------------------------------------------------------
+- Public: async Task<IActionResult>
+  Displays public results for events (no authentication required).
+
+- Index: async Task<IActionResult>
+  Displays authenticated results view with filtering and management options.
+
+- Create (GET): async Task<IActionResult>
+  Displays form to add new race result with handicap calculations.
+
+- Create (POST): async Task<IActionResult>
+  Processes new result, calculates corrected time, updates positions,
+  and recalculates points for all race participants.
+
+- Edit (GET): async Task<IActionResult>
+  Displays form to edit existing result.
+
+- Edit (POST): async Task<IActionResult>
+  Updates result data, recalculates corrected time and positions.
+
+- Delete (POST): async Task<IActionResult>
+  Removes result and recalculates positions for remaining participants.
+
+- BulkUpload (GET): async Task<IActionResult>
+  Displays bulk upload interface for mass result import.
+
+- BulkUpload (POST): async Task<IActionResult>
+  Processes JSON array of results, validates data, and saves to storage.
+
+- DownloadTemplate: async Task<IActionResult>
+  Generates and downloads JSON template for bulk upload format.
+
+- ExportCsv: async Task<IActionResult>
+  Exports event results to CSV format with proper escaping.
+
+- ExportJson: async Task<IActionResult>
+  Exports event results to JSON format.
+
+- Overall: async Task<IActionResult>
+  Displays overall event standings with discard calculations.
+
+- Overview: async Task<IActionResult>
+  Displays comprehensive event overview with class-by-class breakdowns.
+
+Controllers/CacheController.cs:
+--------------------------------------------------------------------------------
+- GetTimestamp (GET): async Task<IActionResult>
+  Returns current timestamp for specified data file to support cache validation.
+
+================================================================================
+SERVICES
+================================================================================
+
+Services/ScoringServices.cs:
+--------------------------------------------------------------------------------
+- CalculatePortsmouthCorrectedTime (static): TimeSpan
+  Calculates corrected time using Portsmouth Yardstick formula:
+  CorrectedTime = ElapsedTime × 1000 ÷ PY_Number
+
+- CalculateIRCCorrectedTime (static): TimeSpan
+  Calculates corrected time using IRC rating:
+  CorrectedTime = ElapsedTime × IRC_Rating
+
+- CalculateYTCCorrectedTime (static): TimeSpan
+  Calculates corrected time using YTC rating:
+  CorrectedTime = ElapsedTime × YTC_RatingFactor
+
+- CalculatePoints (static): int
+  Calculates points based on position and scoring system (Low/High Point).
+
+- CalculatePenaltyPoints (static): int
+  Assigns penalty points for DNS/DNC/DNF/RET statuses.
+
+- CalculateRacePoints (static): void
+  Calculates and assigns points for all results in a race.
+
+- CalculateOverallPointsWithDiscards (static): int
+  Calculates overall points with discard rules applied.
+
+Services/UserService.cs:
+--------------------------------------------------------------------------------
+- HashPassword (static): string
+  Hashes password using SHA256 for secure storage.
+
+- GetAllUsersAsync (static): async Task<List<User>>
+  Retrieves all users from JSON storage.
+
+- GetUserByUsernameAsync (static): async Task<User?>
+  Finds user by username from storage.
+
+- RegisterUserAsync (static): async Task<bool>
+  Creates new user with validation and password hashing.
+
+- ValidateUserAsync (static): async Task<bool>
+  Validates user credentials against stored hash.
+
+Services/HandicapFilterParser.cs:
+--------------------------------------------------------------------------------
+- Parse (static): HandicapFilter
+  Parses handicap filter string (e.g., "Laser<1000PY") into filter object
+  supporting equality, inequality, and range operations.
+
+================================================================================
+HELPERS
+================================================================================
+
+Helpers/FileStorageHelper.cs:
+--------------------------------------------------------------------------------
+- SaveAsync<T> (static): async Task
+  Saves list of objects to JSON file with atomic write operations.
+
+- LoadAsync<T> (static): async Task<List<T>>
+  Loads list of objects from JSON file with error handling.
+
+- SaveWithTimestampAsync<T> (static): async Task
+  Saves data with timestamp wrapper for cache management.
+
+- LoadWithTimestampAsync<T> (static): async Task<TimestampWrapper<T>>
+  Loads data with timestamp for cache validation.
+
+- TimeSpanJsonConverter: JsonConverter<TimeSpan?>
+  Custom JSON converter for TimeSpan serialization/deserialization.
+
+================================================================================
+MODELS
+================================================================================
+
+Models/Event.cs:
+--------------------------------------------------------------------------------
+- Event: class
+  Main event model with races, team members, privacy settings, and discard rules.
+
+- Class: class
+  Boat class model with name, scoring method, and rating.
+
+Models/Race.cs:
+--------------------------------------------------------------------------------
+- Race: class
+  Race model with handicap type/system, scoring settings, and classes collection.
+
+Models/Result.cs:
+--------------------------------------------------------------------------------
+- Result: class
+  Individual result model with timing, positioning, and handicap data.
+
+- IsValid: bool
+  Validates result data integrity.
+
+Models/User.cs:
+--------------------------------------------------------------------------------
+- User: class
+  User authentication model with role-based access control.
+
+Models/HandicapFilter.cs:
+--------------------------------------------------------------------------------
+- HandicapFilter: class
+  Filter model for handicap-based result filtering.
+
+Models/BulkResultDto.cs:
+--------------------------------------------------------------------------------
+- BulkResultDto: class
+  Data transfer object for bulk result uploads.
+
+Models/ErrorViewModel.cs:
+--------------------------------------------------------------------------------
+- ErrorViewModel: class
+  Error page data model with request ID handling.
+
+================================================================================
+CONFIGURATION & STARTUP
+================================================================================
+
+Program.cs:
+--------------------------------------------------------------------------------
+- Main (static): void
+  Application entry point, builds and runs web host.
+
+- CreateHostBuilder (static): IHostBuilder
+  Configures default ASP.NET Core host with Startup class.
+
+Startup.cs:
+--------------------------------------------------------------------------------
+- ConfigureServices: void
+  Registers services, authentication, authorization policies, and middleware.
+
+- Configure: void
+  Configures request pipeline with routing, authentication, and static files.
+
+================================================================================
+VIEWS (RAZOR TEMPLATES)
+================================================================================
+
+Views/_Layout.cshtml:
+--------------------------------------------------------------------------------
+Main layout template with navigation, hero section, and footer.
+
+Views/_LoginPartial.cshtml:
+--------------------------------------------------------------------------------
+Authentication status and login/logout controls.
+
+Views/_ViewImports.cshtml:
+--------------------------------------------------------------------------------
+Shared using statements and tag helpers for all views.
+
+Views/_ViewStart.cshtml:
+--------------------------------------------------------------------------------
+Layout specification for all views.
+
+Views/Home/Index.cshtml:
+--------------------------------------------------------------------------------
+Landing page with feature highlights.
+
+Views/Account/Login.cshtml:
+--------------------------------------------------------------------------------
+User login form with validation.
+
+Views/Account/Register.cshtml:
+--------------------------------------------------------------------------------
+User registration form with role selection.
+
+Views/Events/Index.cshtml:
+--------------------------------------------------------------------------------
+Events listing with management actions.
+
+Views/Events/Create.cshtml:
+--------------------------------------------------------------------------------
+Event creation form.
+
+Views/Events/Edit.cshtml:
+--------------------------------------------------------------------------------
+Event editing form.
+
+Views/Events/Races.cshtml:
+--------------------------------------------------------------------------------
+Race listing with management options.
+
+Views/Events/CreateRace.cshtml:
+--------------------------------------------------------------------------------
+Race creation form with handicap settings.
+
+Views/Events/EditRace.cshtml:
+--------------------------------------------------------------------------------
+Race editing form.
+
+Views/Events/Classes.cshtml:
+--------------------------------------------------------------------------------
+Class listing with CRUD operations.
+
+Views/Events/CreateClass.cshtml:
+--------------------------------------------------------------------------------
+Class creation form.
+
+Views/Events/Team.cshtml:
+--------------------------------------------------------------------------------
+Team member management interface.
+
+Views/Results/Index.cshtml:
+--------------------------------------------------------------------------------
+Results display with filtering and export options.
+
+Views/Results/Create.cshtml:
+--------------------------------------------------------------------------------
+Individual result creation form.
+
+Views/Results/Edit.cshtml:
+--------------------------------------------------------------------------------
+Result editing form.
+
+Views/Results/BulkUpload.cshtml:
+--------------------------------------------------------------------------------
+Bulk upload interface with template download.
+
+Views/Results/EventList.cshtml:
+--------------------------------------------------------------------------------
+Public events listing for non-authenticated users.
+
+Views/Results/Overall.cshtml:
+--------------------------------------------------------------------------------
+Overall event standings with discards.
+
+Views/Results/Overview.cshtml:
+--------------------------------------------------------------------------------
+Comprehensive event overview with class breakdowns.
+
+Views/Shared/Error.cshtml:
+--------------------------------------------------------------------------------
+Error display page.
+
+================================================================================
+STATIC ASSETS
+================================================================================
+
+wwwroot/css/site.css:
+--------------------------------------------------------------------------------
+Custom CSS styles for the application.
+
+wwwroot/js/site.js:
+--------------------------------------------------------------------------------
+General JavaScript utilities.
+
+wwwroot/js/cache-manager.js:
+--------------------------------------------------------------------------------
+Client-side cache management and timestamp checking.
+
+================================================================================
+DATA FILES
+================================================================================
+
+Data/events.json:
+--------------------------------------------------------------------------------
+JSON storage for event data with timestamp wrapper.
+
+Data/results.json:
+--------------------------------------------------------------------------------
+JSON storage for race results with timestamp wrapper.
+
+Data/users.json:
+--------------------------------------------------------------------------------
+JSON storage for user authentication data.
+
+================================================================================
+CONFIGURATION FILES
+================================================================================
+
+appsettings.json:
+--------------------------------------------------------------------------------
+Application configuration settings.
+
+appsettings.Development.json:
+--------------------------------------------------------------------------------
+Development-specific configuration overrides.
+
+Properties/launchSettings.json:
+--------------------------------------------------------------------------------
+Launch profiles for different environments.
+
+================================================================================
+PROJECT FILES
+================================================================================
+
+SailingResultsPortal.csproj:
+--------------------------------------------------------------------------------
+.NET project file with dependencies and build configuration.
+
+SailingResultsPortal.sln:
+--------------------------------------------------------------------------------
+Visual Studio solution file.
+
+README:
+--------------------------------------------------------------------------------
+Project documentation and setup instructions.
+
+LICENSE:
+--------------------------------------------------------------------------------
+Project license information.
+
+================================================================================
+BUILD & DEPLOYMENT
+================================================================================
+
+bin/Debug/net8.0/:
+--------------------------------------------------------------------------------
+Compiled application binaries and dependencies.
+
+obj/:
+--------------------------------------------------------------------------------
+Intermediate build files and cache.
+
+.gitattributes:
+--------------------------------------------------------------------------------
+Git line ending configuration.
+
+.gitignore:
+--------------------------------------------------------------------------------
+Git ignore rules for build artifacts and sensitive files.

@@ -4,6 +4,7 @@
     ViewData["Title"] = "Add Result";
     string raceId = Model.RaceId;
     string classId = Model.ClassId;
+    string eventId = ViewData["EventId"] as string ?? "";
     string handicapType = ViewData["HandicapType"] as string ?? "Open";
     string handicapSystem = ViewData["HandicapSystem"] as string ?? "Portsmouth";
 }
@@ -14,23 +15,33 @@
     @Html.AntiForgeryToken()
 
     <input type="hidden" asp-for="RaceId" />
-    <input type="hidden" asp-for="ClassId" />
+    <input type="hidden" asp-for="ClassId" value="@(string.IsNullOrEmpty(Model.ClassId) ? "" : Model.ClassId)" />
+    <input type="hidden" asp-for="Position" value="1" />
 
     <label class="block mb-2 font-semibold" for="SailorName">Sailor Name</label>
-    <input asp-for="SailorName" id="SailorName" name="SailorName" class="w-full mb-4 p-2 border rounded" required />
+    <input asp-for="SailorName" id="SailorName" name="SailorName" class="w-full mb-4 p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent" required maxlength="100" pattern="[a-zA-Z\s\-'\.]+" title="Only letters, spaces, hyphens, apostrophes, and periods allowed" />
 
     <label class="block mb-2 font-semibold" for="SailNumber">Sail Number</label>
-    <input asp-for="SailNumber" id="SailNumber" name="SailNumber" class="w-full mb-4 p-2 border rounded" required />
+    <input asp-for="SailNumber" id="SailNumber" name="SailNumber" class="w-full mb-4 p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent" required maxlength="20" pattern="[a-zA-Z0-9\-/\s]+" title="Only letters, numbers, hyphens, slashes, and spaces allowed" />
+
+    <label class="block mb-2 font-semibold" for="Status">Status</label>
+    <select asp-for="Status" id="Status" name="Status" class="w-full mb-4 p-2 border rounded">
+        <option value="">Finished</option>
+        <option value="DNS">DNS - Did Not Start</option>
+        <option value="DNC">DNC - Did Not Compete</option>
+        <option value="DNF">DNF - Did Not Finish</option>
+        <option value="RET">RET - Retired</option>
+    </select>
 
     <label class="block mb-2 font-semibold" for="FinishTimeInput">Elapsed Time (hh:mm:ss)</label>
-    <input id="FinishTimeInput" name="finishTimeInput" type="text" placeholder="00:00:00" class="w-full mb-4 p-2 border rounded" required />
+    <input id="FinishTimeInput" name="finishTimeInput" type="text" placeholder="00:00:00" class="w-full mb-4 p-2 border rounded" />
 
     @if (handicapType == "Open")
     {
         <label class="block mb-2 font-semibold" for="HandicapNumber">Handicap Number (@handicapSystem)</label>
-        <input id="HandicapNumber" name="handicapNumber" type="number" step="0.01" min="1" class="w-full mb-4 p-2 border rounded" required />
+        <input id="HandicapNumber" name="handicapNumber" type="number" step="0.01" min="1" class="w-full mb-4 p-2 border rounded" />
     }
 
     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Result</button>
-    <a href="/Results?raceId=@raceId&classId=@classId" class="ml-4 underline">Cancel</a>
+    <a href="/Results?eventId=@eventId" class="ml-4 underline">Cancel</a>
 </form>

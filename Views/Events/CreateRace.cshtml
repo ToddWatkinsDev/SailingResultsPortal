@@ -26,6 +26,26 @@
         <option value="OneDesign" selected="@(Model.HandicapType == "OneDesign")">One Design</option>
     </select>
 
+    <label class="block mb-2 font-semibold" for="ScoringSystem">Scoring System</label>
+    <select asp-for="ScoringSystem" id="ScoringSystem" name="ScoringSystem" class="w-full mb-4 p-2 border rounded" required>
+        <option value="LowPoint" selected="@(Model.ScoringSystem == "LowPoint")">Low Point Scoring</option>
+        <option value="HighPoint" selected="@(Model.ScoringSystem == "HighPoint")">High Point Scoring</option>
+    </select>
+
+    <div class="mb-4">
+        <label class="flex items-center">
+            <input asp-for="IsMedalRace" id="IsMedalRace" name="IsMedalRace" type="checkbox" class="mr-2" />
+            <span class="font-semibold">Medal Race (doubles points)</span>
+        </label>
+    </div>
+
+    <div class="mb-4">
+        <label class="flex items-center">
+            <input asp-for="IncludeOverall" id="IncludeOverall" name="IncludeOverall" type="checkbox" class="mr-2" checked="@Model.IncludeOverall" />
+            <span class="font-semibold">Include Overall Class</span>
+        </label>
+    </div>
+
     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Create</button>
     <a href="/Events/Races?eventId=@eventId" class="ml-4 underline">Cancel</a>
 </form>

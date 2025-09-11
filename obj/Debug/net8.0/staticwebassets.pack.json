@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\jerse\\Documents\\SailingResultsPortal\\wwwroot\\js\\cache-manager.js",
+      "PackagePath": "staticwebassets\\js\\cache-manager.js"
+    },
+    {
       "Id": "C:\\Users\\jerse\\Documents\\SailingResultsPortal\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "2pAeJJBoJk9xzoH7kepNdnYaGjEBzyonrmtjwsG9+Ls=",
+  "Hash": "iz+YtCTNRrW4tNGhZuR8oBvl3Tuql6w+rOG+RdFSbOg=",
   "Source": "SailingResultsPortal",
   "BasePath": "_content/SailingResultsPortal",
   "Mode": "Default",
@@ -91,6 +91,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\jerse\\Documents\\SailingResultsPortal\\wwwroot\\js\\cache-manager.js",
+      "SourceId": "SailingResultsPortal",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\jerse\\Documents\\SailingResultsPortal\\wwwroot\\",
+      "BasePath": "_content/SailingResultsPortal",
+      "RelativePath": "js/cache-manager.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\cache-manager.js"
     },
     {
       "Identity": "C:\\Users\\jerse\\Documents\\SailingResultsPortal\\wwwroot\\js\\site.js",

@@ -1,0 +1,80 @@
+@model SailingResultsPortal.Models.Event
+
+@{
+    ViewData["Title"] = "Event Team";
+    string eventId = ViewData["EventId"] as string ?? "";
+    var teamMembers = ViewData["TeamMembers"] as List<SailingResultsPortal.Models.User> ?? new();
+    var availableUsers = ViewData["AvailableUsers"] as List<SailingResultsPortal.Models.User> ?? new();
+}
+
+<nav class="text-sm text-gray-600 mb-4" aria-label="Breadcrumb">
+    <ol class="list-reset flex">
+        <li><a href="/Events" class="hover:underline">Events</a></li>
+        <li><span class="mx-2">/</span></li>
+        <li>@Model.Name</li>
+        <li><span class="mx-2">/</span></li>
+        <li>Team</li>
+    </ol>
+</nav>
+
+<h1 class="text-2xl font-bold mb-4">@Model.Name - Event Team</h1>
+
+<div class="grid md:grid-cols-2 gap-6">
+    <!-- Current Team Members -->
+    <div class="bg-white rounded shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">Current Team Members</h2>
+        @if (teamMembers.Any())
+        {
+            <ul class="space-y-2">
+                @foreach (var member in teamMembers)
+                {
+                    <li class="flex justify-between items-center bg-gray-50 p-3 rounded">
+                        <div>
+                            <span class="font-medium">@member.Username</span>
+                            <span class="text-sm text-gray-600">(@member.Role)</span>
+                        </div>
+                        <form method="post" asp-action="RemoveTeamMember" asp-route-eventId="@eventId" asp-route-userId="@member.Id" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="text-red-600 hover:text-red-800 text-sm">Remove</button>
+                        </form>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-gray-500">No team members assigned yet.</p>
+        }
+    </div>
+
+    <!-- Available Users -->
+    <div class="bg-white rounded shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">Available Users</h2>
+        @if (availableUsers.Any())
+        {
+            <ul class="space-y-2">
+                @foreach (var user in availableUsers)
+                {
+                    <li class="flex justify-between items-center bg-gray-50 p-3 rounded">
+                        <div>
+                            <span class="font-medium">@user.Username</span>
+                            <span class="text-sm text-gray-600">(@user.Role)</span>
+                        </div>
+                        <form method="post" asp-action="AddTeamMember" asp-route-eventId="@eventId" asp-route-userId="@user.Id" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="text-green-600 hover:text-green-800 text-sm">Add</button>
+                        </form>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-gray-500">All users are already team members.</p>
+        }
+    </div>
+</div>
+
+<div class="mt-6">
+    <a href="/Events/Races?eventId=@eventId" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Back to Event</a>
+</div>

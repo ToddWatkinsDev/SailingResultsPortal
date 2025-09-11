@@ -15,8 +15,63 @@
 
 <h1 class="text-2xl font-bold mb-4">Races for @Model.Name</h1>
 
-<a href="/Events/CreateRace?eventId=@eventId" 
-   class="inline-block mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">+ New Race</a>
+<div class="mb-6 p-4 bg-gray-50 rounded-lg">
+    <h2 class="text-lg font-semibold mb-3">Event Settings</h2>
+    <div class="flex items-center justify-between">
+        <div>
+            <span class="text-sm font-medium">Privacy:</span>
+            <span class="ml-2 px-2 py-1 text-xs rounded-full @(Model.IsPublic ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800")">
+                @(Model.IsPublic ? "Public" : "Private")
+            </span>
+        </div>
+        <form method="post" asp-action="TogglePrivacy" asp-route-eventId="@eventId" class="inline">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
+                @(Model.IsPublic ? "Make Private" : "Make Public")
+            </button>
+        </form>
+    </div>
+
+    @if (!Model.IsPublic)
+    {
+        <div class="mt-4">
+            <h3 class="text-sm font-medium mb-2">Allowed Users (@Model.AllowedUsers.Count)</h3>
+            @if (Model.AllowedUsers.Any())
+            {
+                <div class="flex flex-wrap gap-2 mb-3">
+                    @foreach (var userId in Model.AllowedUsers)
+                    {
+                        <span class="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">
+                            @userId
+                            <form method="post" asp-action="RemoveAllowedUser" asp-route-eventId="@eventId" asp-route-userId="@userId" class="ml-1">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="text-blue-600 hover:text-blue-800">×</button>
+                            </form>
+                        </span>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-sm text-gray-600 mb-3">No users have been granted access yet.</p>
+            }
+
+            <div class="flex gap-2">
+                <input type="text" id="newUserId" name="newUserId" placeholder="Enter User ID"
+                       class="flex-1 px-3 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                <button type="button" onclick="addUser('@eventId')"
+                        class="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700">
+                    Add User
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="mb-4 flex gap-4">
+    <a href="/Events/CreateRace?eventId=@eventId" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">+ New Race</a>
+    <a href="/Events/Team?eventId=@eventId" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Manage Team</a>
+</div>
 
 <table class="w-full border-collapse border border-gray-300">
     <thead>
@@ -39,7 +94,16 @@
                     <a href="/Events/Classes?eventId=@eventId&raceId=@race.Id" class="text-blue-600 hover:underline">View Classes (@race.Classes.Count)</a>
                 </td>
                 <td class="border border-gray-300 p-2 text-center">
-                    <a href="/Events/EditRace?eventId=@eventId&raceId=@race.Id" class="text-blue-600 hover:underline">Edit</a>
+                    <a href="/Events/EditRace?eventId=@eventId&raceId=@race.Id" class="text-blue-600 hover:underline mr-2">Edit</a>
+                    @if (race.Classes.Any())
+                    {
+                        <a href="/Events/Classes?eventId=@eventId&raceId=@race.Id" class="text-green-600 hover:underline">Manage Classes</a>
+                    }
+                    else
+                    {
+                        <a href="/Results/Create?raceId=@race.Id&classId=" class="text-green-600 hover:underline mr-2">+ Add Results</a>
+                        <a href="/Results/BulkUpload?eventId=@eventId&raceId=@race.Id" class="text-orange-600 hover:underline">📤 Bulk Upload</a>
+                    }
                 </td>
             </tr>
         }
@@ -47,3 +111,30 @@
 </table>
 
 <p><a href="/Events" class="underline">Back to Events</a></p>
+
+@section Scripts {
+    <script>
+        function addUser(eventId) {
+            const userId = document.getElementById('newUserId').value.trim();
+            if (!userId) {
+                alert('Please enter a User ID');
+                return;
+            }
+
+            // Create a form to submit the request
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = `/Events/AddAllowedUser?eventId=${eventId}&userId=${encodeURIComponent(userId)}`;
+
+            // Add anti-forgery token
+            const tokenInput = document.createElement('input');
+            tokenInput.type = 'hidden';
+            tokenInput.name = '__RequestVerificationToken';
+            tokenInput.value = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            form.appendChild(tokenInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+}

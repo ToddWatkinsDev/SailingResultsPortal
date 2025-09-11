@@ -1,19 +1,20 @@
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 
-<div>
+<div class="flex items-center space-x-4">
     @{
         var user = HttpContextAccessor.HttpContext?.User;
         if (user?.Identity?.IsAuthenticated ?? false)
         {
-            <span>Welcome, @user.Identity.Name</span>
-            <form method="post" asp-controller="Account" asp-action="Logout" class="inline ml-4">
-                <button type="submit" class="underline hover:text-gray-300">Logout</button>
+            <span class="text-white">Welcome, @user.Identity.Name (@user.FindFirst("http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value)</span>
+            <form method="post" asp-controller="Account" asp-action="Logout" class="inline">
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">Logout</button>
             </form>
         }
         else
         {
-            <a href="/Account/Login" class="underline hover:text-gray-300">Login</a>
+            <a href="/Account/Login" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">Login</a>
+            <a href="/Account/Register" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">Sign Up</a>
         }
     }
 </div>

@@ -13,6 +13,15 @@ namespace SailingResultsPortal.Models
         // Handicap system: "Portsmouth", "IRC", or "YTC"
         public string HandicapSystem { get; set; } = "Portsmouth";
 
+        // Scoring system: "LowPoint" or "HighPoint"
+        public string ScoringSystem { get; set; } = "LowPoint";
+
+        // Whether this is a medal race (doubles points)
+        public bool IsMedalRace { get; set; } = false;
+
+        // Whether to include an overall class
+        public bool IncludeOverall { get; set; } = true;
+
         public List<Class> Classes { get; set; } = new();
     }
 }

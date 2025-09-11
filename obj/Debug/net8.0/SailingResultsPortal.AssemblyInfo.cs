@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SailingResultsPortal")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+866338740dd089675d95ed30d28f55125136665a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+41976bd4b0830cf43b7b189ba533fbcf6a5d61ec")]
 [assembly: System.Reflection.AssemblyProductAttribute("SailingResultsPortal")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SailingResultsPortal")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

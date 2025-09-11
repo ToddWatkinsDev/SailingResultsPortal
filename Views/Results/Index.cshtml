@@ -1,19 +1,12 @@
-@model List<SailingResultsPortal.Models.Result>
-
 @{
     ViewData["Title"] = "Results";
-    string raceId = Context.Request.Query["raceId"].ToString() ?? string.Empty;
-    string classId = Context.Request.Query["classId"].ToString() ?? string.Empty;
-    string eventId = ViewData["EventId"] as string ?? ""; // Ideally pass this from controller
+    string eventId = ViewData["EventId"] as string ?? "";
+    var groupedResults = ViewData["GroupedResults"] as List<dynamic> ?? new List<dynamic>();
 }
 
 <nav class="text-sm text-gray-600 mb-4" aria-label="Breadcrumb">
     <ol class="list-reset flex">
         <li><a href="/Events" class="hover:underline">Events</a></li>
-        <li><span class="mx-2">/</span></li>
-        <li><a href="/Events/Races?eventId=@eventId" class="hover:underline">Races</a></li>
-        <li><span class="mx-2">/</span></li>
-        <li><a href="/Events/Classes?eventId=@eventId&raceId=@raceId" class="hover:underline">Classes</a></li>
         <li><span class="mx-2">/</span></li>
         <li>Results</li>
     </ol>
@@ -21,29 +14,152 @@
 
 <h1 class="text-2xl font-bold mb-4">Results</h1>
 
-<a href="/Results/Create?raceId=@raceId&classId=@classId" 
-   class="inline-block mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">+ Add Result</a>
+<div class="mb-6 flex flex-wrap gap-3">
+    <a href="/Events/Races?eventId=@eventId" class="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 font-medium inline-flex items-center shadow-lg">
+        <i data-lucide="plus" class="w-5 h-5 mr-2"></i>
+        Add Results
+    </a>
+    <a href="/Results/BulkUpload?eventId=@eventId" class="bg-gradient-to-r from-orange-600 to-orange-700 text-white px-6 py-3 rounded-lg hover:from-orange-700 hover:to-orange-800 transition-all duration-200 font-medium inline-flex items-center shadow-lg">
+        <i data-lucide="upload" class="w-5 h-5 mr-2"></i>
+        Bulk Upload
+    </a>
+    <a href="/Results/Overview?eventId=@eventId" class="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-3 rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-200 font-medium inline-flex items-center shadow-lg">
+        <i data-lucide="bar-chart-3" class="w-5 h-5 mr-2"></i>
+        Event Overview
+    </a>
+    <a href="/Results/Overall?eventId=@eventId" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium inline-flex items-center shadow-lg">
+        <i data-lucide="trophy" class="w-5 h-5 mr-2"></i>
+        Overall Standings
+    </a>
+    <a href="/Results/ExportCsv?eventId=@eventId" class="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 font-medium inline-flex items-center shadow-lg">
+        <i data-lucide="download" class="w-5 h-5 mr-2"></i>
+        Export CSV
+    </a>
+    <a href="/Results/ExportJson?eventId=@eventId" class="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white px-6 py-3 rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-all duration-200 font-medium inline-flex items-center shadow-lg">
+        <i data-lucide="file-json" class="w-5 h-5 mr-2"></i>
+        Export JSON
+    </a>
+</div>
 
-<table class="w-full border-collapse border border-gray-300">
-    <thead>
-        <tr class="bg-gray-200">
-            <th class="border border-gray-300 p-2 text-center">Position</th>
-            <th class="border border-gray-300 p-2">Sailor Name</th>
-            <th class="border border-gray-300 p-2">Sail Number</th>
-            <th class="border border-gray-300 p-2 text-center">Finish Time</th>
-            <th class="border border-gray-300 p-2 text-center">Corrected Time</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var result in Model)
-        {
-            <tr>
-                <td class="border border-gray-300 p-2 text-center">@result.Position</td>
-                <td class="border border-gray-300 p-2">@result.SailorName</td>
-                <td class="border border-gray-300 p-2">@result.SailNumber</td>
-                <td class="border border-gray-300 p-2 text-center">@result.FinishTime.ToString(@"hh\:mm\:ss")</td>
-                <td class="border border-gray-300 p-2 text-center">@result.CorrectedTime:F2</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<form method="get" class="mb-4">
+    <label for="filter" class="block mb-2 font-medium">Filter (e.g., Laser<1000PY):</label>
+    <input type="text" id="filter" name="filter" class="w-full p-2 border rounded mb-2" value="@Context.Request.Query["filter"]" />
+    <input type="hidden" name="eventId" value="@eventId" />
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Apply Filter</button>
+</form>
+
+@foreach (var handicapGroup in groupedResults)
+{
+    <h2 class="text-xl font-semibold mb-2">@handicapGroup.HandicapSystem Handicap</h2>
+    
+    @foreach (var classGroup in handicapGroup.Classes)
+    {
+        <h3 class="text-lg font-medium mb-1">@classGroup.ClassName</h3>
+        
+        <table class="w-full border-collapse border border-gray-300 mb-4">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-gray-300 p-2 text-center">Position</th>
+                    <th class="border border-gray-300 p-2">Sailor Name</th>
+                    <th class="border border-gray-300 p-2">Sail Number</th>
+                    @if (handicapGroup.HandicapSystem == "Portsmouth" || handicapGroup.HandicapSystem == "IRC" || handicapGroup.HandicapSystem == "YTC")
+                    {
+                        <th class="border border-gray-300 p-2 text-center">@handicapGroup.HandicapSystem</th>
+                    }
+                    <th class="border border-gray-300 p-2 text-center">Status</th>
+                    <th class="border border-gray-300 p-2 text-center">Finish Time</th>
+                    <th class="border border-gray-300 p-2 text-center">Corrected Time</th>
+                    <th class="border border-gray-300 p-2 text-center">Points</th>
+                    @if ((User?.IsInRole("Sudo") ?? false) || (User?.IsInRole("Organiser") ?? false))
+                    {
+                        <th class="border border-gray-300 p-2 text-center">Actions</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in classGroup.Results)
+                {
+                    <tr>
+                        <td class="border border-gray-300 p-2 text-center">@result.Position</td>
+                        <td class="border border-gray-300 p-2">@result.SailorName</td>
+                        <td class="border border-gray-300 p-2">@result.SailNumber</td>
+                        @if (handicapGroup.HandicapSystem == "Portsmouth" || handicapGroup.HandicapSystem == "IRC" || handicapGroup.HandicapSystem == "YTC")
+                        {
+                            <td class="border border-gray-300 p-2 text-center">
+                                @if (result.HandicapNumber != null)
+                                {
+                                    <span class="font-mono text-sm">@result.HandicapNumber</span>
+                                }
+                                else
+                                {
+                                    <span class="text-gray-400">-</span>
+                                }
+                            </td>
+                        }
+                        <td class="border border-gray-300 p-2 text-center">
+                            @if (result.Status != null)
+                            {
+                                <span class="px-2 py-1 text-xs bg-red-100 text-red-800 rounded">@result.Status</span>
+                            }
+                            else
+                            {
+                                <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded">Finished</span>
+                            }
+                        </td>
+                        <td class="border border-gray-300 p-2 text-center">
+                            @{
+                                try
+                                {
+                                    var finishTime = result.FinishTime;
+                                    if (finishTime != null)
+                                    {
+                                        string timeStr = finishTime.ToString();
+                                        if (timeStr != "00:00:00" && timeStr != "")
+                                        {
+                                            @TimeSpan.Parse(timeStr).ToString(@"hh\:mm\:ss")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-gray-500">-</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-gray-500">-</span>
+                                    }
+                                }
+                                catch
+                                {
+                                    <span class="text-gray-500">-</span>
+                                }
+                            }
+                        </td>
+                        <td class="border border-gray-300 p-2 text-center">@SailingResultsPortal.Controllers.ResultsController.FormatTimeFromSeconds(result.CorrectedTime)</td>
+                        <td class="border border-gray-300 p-2 text-center font-semibold">@result.Points</td>
+                        @if ((User?.IsInRole("Sudo") ?? false) || (User?.IsInRole("Organiser") ?? false))
+                        {
+                            <td class="border border-gray-300 p-2 text-center">
+                                <a href="/Results/Edit?id=@result.Id" class="text-blue-600 hover:underline">Edit</a> |
+                                <form method="post" asp-action="Delete" asp-route-id="@result.Id" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('Are you sure?')">Delete</button>
+                                </form>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+@section Scripts {
+    <script>
+        // Set timestamps for cache manager
+        window.eventsTimestamp = '@ViewData["EventsTimestamp"]';
+        window.resultsTimestamp = '@ViewData["ResultsTimestamp"]';
+
+        // Add body class for cache manager
+        document.body.classList.add('results-index');
+    </script>
+}

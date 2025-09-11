@@ -31,3 +31,13 @@
         }
     </tbody>
 </table>
+
+@section Scripts {
+<script>
+    // Set timestamps for cache manager
+    window.eventsTimestamp = '@ViewData["EventsTimestamp"]';
+
+    // Add body class for cache manager
+    document.body.classList.add('events-index');
+</script>
+}

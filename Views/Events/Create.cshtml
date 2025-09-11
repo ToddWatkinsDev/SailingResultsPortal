@@ -12,6 +12,14 @@
     <label class="block mb-2 font-semibold" for="Name">Event Name</label>
     <input asp-for="Name" id="Name" name="Name" class="w-full mb-4 p-2 border rounded" required />
 
+    <label class="block mb-2 font-semibold" for="RacesBeforeDiscards">Races Before Discards</label>
+    <input asp-for="RacesBeforeDiscards" id="RacesBeforeDiscards" name="RacesBeforeDiscards" type="number" min="0" class="w-full mb-4 p-2 border rounded" placeholder="0 = no discards" />
+    <small class="text-gray-600 mb-4 block">Number of races completed before discards can be used (0 = no discards)</small>
+
+    <label class="block mb-2 font-semibold" for="NumberOfDiscards">Number of Discards</label>
+    <input asp-for="NumberOfDiscards" id="NumberOfDiscards" name="NumberOfDiscards" type="number" min="0" class="w-full mb-4 p-2 border rounded" placeholder="0" />
+    <small class="text-gray-600 mb-4 block">Number of worst races to discard from overall scoring</small>
+
     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Create</button>
     <a href="/Events" class="ml-4 underline">Cancel</a>
 </form>

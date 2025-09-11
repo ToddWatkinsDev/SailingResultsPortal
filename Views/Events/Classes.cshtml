@@ -26,7 +26,9 @@
         <tr class="bg-gray-200">
             <th class="border border-gray-300 p-2 text-left">Name</th>
             <th class="border border-gray-300 p-2 text-center">Scoring Method</th>
+            <th class="border border-gray-300 p-2 text-center">Rating</th>
             <th class="border border-gray-300 p-2 text-center">Results</th>
+            <th class="border border-gray-300 p-2 text-center">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -35,8 +37,16 @@
             <tr>
                 <td class="border border-gray-300 p-2">@cls.Name</td>
                 <td class="border border-gray-300 p-2 text-center">@cls.ScoringMethod</td>
+                <td class="border border-gray-300 p-2 text-center">@cls.Rating</td>
                 <td class="border border-gray-300 p-2 text-center">
-                    <a href="/Results?raceId=@raceId&classId=@cls.Id" class="text-blue-600 hover:underline">View Results</a>
+                    <a href="/Results/Create?raceId=@raceId&classId=@cls.Id" class="text-green-600 hover:underline mr-2">+ Add Result</a>
+                    <a href="/Results?eventId=@eventId" class="text-blue-600 hover:underline">View Results</a>
+                </td>
+                <td class="border border-gray-300 p-2 text-center">
+                    <form method="post" asp-action="DeleteClass" asp-route-eventId="@eventId" asp-route-raceId="@raceId" asp-route-classId="@cls.Id" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('Are you sure you want to delete the class "@cls.Name"?')">Delete</button>
+                    </form>
                 </td>
             </tr>
         }

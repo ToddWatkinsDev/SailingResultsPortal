@@ -2,6 +2,7 @@ C:\Users\jerse\Documents\SailingResultsPortal\bin\Debug\net8.0\appsettings.Devel
 C:\Users\jerse\Documents\SailingResultsPortal\bin\Debug\net8.0\appsettings.json
 C:\Users\jerse\Documents\SailingResultsPortal\bin\Debug\net8.0\Data\events.json
 C:\Users\jerse\Documents\SailingResultsPortal\bin\Debug\net8.0\Data\results.json
+C:\Users\jerse\Documents\SailingResultsPortal\bin\Debug\net8.0\Data\users.json
 C:\Users\jerse\Documents\SailingResultsPortal\bin\Debug\net8.0\SailingResultsPortal.staticwebassets.runtime.json
 C:\Users\jerse\Documents\SailingResultsPortal\bin\Debug\net8.0\SailingResultsPortal.exe
 C:\Users\jerse\Documents\SailingResultsPortal\bin\Debug\net8.0\SailingResultsPortal.deps.json

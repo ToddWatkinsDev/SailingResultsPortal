@@ -1,0 +1,34 @@
+[
+  {
+    "Id": "admin-user-001",
+    "Username": "admin",
+    "Email": "admin@sailingportal.com",
+    "PasswordHash": "8bb6118f8fd6935ad0876a3be34a717d32708ffd",
+    "Role": "Sudo",
+    "CreatedAt": "2025-01-01T00:00:00Z"
+  },
+  {
+    "Id": "organiser-user-001",
+    "Username": "organiser1",
+    "Email": "organiser1@sailingportal.com",
+    "PasswordHash": "8bb6118f8fd6935ad0876a3be34a717d32708ffd",
+    "Role": "Organiser",
+    "CreatedAt": "2025-01-01T00:00:00Z"
+  },
+  {
+    "Id": "official-user-001",
+    "Username": "official1",
+    "Email": "official1@sailingportal.com",
+    "PasswordHash": "8bb6118f8fd6935ad0876a3be34a717d32708ffd",
+    "Role": "Official",
+    "CreatedAt": "2025-01-01T00:00:00Z"
+  },
+  {
+    "Id": "user-001",
+    "Username": "user1",
+    "Email": "user1@sailingportal.com",
+    "PasswordHash": "8bb6118f8fd6935ad0876a3be34a717d32708ffd",
+    "Role": "User",
+    "CreatedAt": "2025-01-01T00:00:00Z"
+  }
+]

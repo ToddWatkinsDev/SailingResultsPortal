@@ -1,29 +1,181 @@
-[
-  {
-    "Id": "6e9e1c8d-0050-465e-8186-d49b2e982f5a",
-    "Name": "Test",
-    "Races": [
-      {
-        "Id": "8be16afd-fc5a-49f3-a467-119c4b57685c",
-        "Name": "Open",
-        "HandicapType": "Open",
-        "HandicapSystem": "Portsmouth",
-        "Classes": [
-          {
-            "Id": "036741e5-1106-46c4-9880-a740c4c34ae6",
-            "Name": "Fast",
-            "ScoringMethod": "Portsmouth",
-            "Rating": 1
-          }
-        ]
-      },
-      {
-        "Id": "30aca269-8208-4a1c-a810-3a435af4f2a4",
-        "Name": "1Design",
-        "HandicapType": "OneDesign",
-        "HandicapSystem": "Portsmouth",
-        "Classes": []
-      }
-    ]
-  }
-]
+{
+  "LastUpdated": "2025-09-10T20:51:30.000Z",
+  "Data": [
+    {
+      "Id": "a8891b63-a56e-4859-9bd6-8b64ebc267a8",
+      "Name": "Summer Regatta 2025",
+      "Races": [
+        {
+          "Id": "5b6b1aee-70a5-4749-8786-f1310501612e",
+          "Name": "Race 1 - Light Wind",
+          "HandicapType": "Open",
+          "HandicapSystem": "Portsmouth",
+          "ScoringSystem": "LowPoint",
+          "IsMedalRace": false,
+          "IncludeOverall": true,
+          "Classes": [
+            {
+              "Id": "eb02dccb-eaa8-4c53-84d3-f3accd90e94e",
+              "Name": "Laser",
+              "ScoringMethod": "Portsmouth",
+              "Rating": 1098
+            },
+            {
+              "Id": "f3c4d5e6-7890-1234-5678-9abcdef01234",
+              "Name": "RS200",
+              "ScoringMethod": "Portsmouth",
+              "Rating": 1046
+            }
+          ]
+        },
+        {
+          "Id": "b4aba988-8da0-4532-833e-503743af74ab",
+          "Name": "Race 2 - Medium Wind",
+          "HandicapType": "Open",
+          "HandicapSystem": "Portsmouth",
+          "ScoringSystem": "LowPoint",
+          "IsMedalRace": false,
+          "IncludeOverall": true,
+          "Classes": [
+            {
+              "Id": "eb02dccb-eaa8-4c53-84d3-f3accd90e94e",
+              "Name": "Laser",
+              "ScoringMethod": "Portsmouth",
+              "Rating": 1098
+            },
+            {
+              "Id": "f3c4d5e6-7890-1234-5678-9abcdef01234",
+              "Name": "RS200",
+              "ScoringMethod": "Portsmouth",
+              "Rating": 1046
+            }
+          ]
+        },
+        {
+          "Id": "c5c6d7e8-9012-3456-7890-abcdef123456",
+          "Name": "Race 3 - Final Race",
+          "HandicapType": "Open",
+          "HandicapSystem": "Portsmouth",
+          "ScoringSystem": "LowPoint",
+          "IsMedalRace": true,
+          "IncludeOverall": true,
+          "Classes": [
+            {
+              "Id": "eb02dccb-eaa8-4c53-84d3-f3accd90e94e",
+              "Name": "Laser",
+              "ScoringMethod": "Portsmouth",
+              "Rating": 1098
+            },
+            {
+              "Id": "f3c4d5e6-7890-1234-5678-9abcdef01234",
+              "Name": "RS200",
+              "ScoringMethod": "Portsmouth",
+              "Rating": 1046
+            }
+          ]
+        }
+      ],
+      "TeamMembers": [
+        "official-user-001",
+        "organiser-user-001"
+      ],
+      "IsPublic": true,
+      "AllowedUsers": [],
+      "DefaultScoringSystem": "LowPoint",
+      "IncludeOverallByDefault": true,
+      "DefaultClasses": [],
+      "RacesBeforeDiscards": 2,
+      "NumberOfDiscards": 1
+    },
+    {
+      "Id": "d6d7e8f9-0123-4567-8901-bcdef2345678",
+      "Name": "Winter Series 2025",
+      "Races": [
+        {
+          "Id": "e7e8f9a0-1234-5678-9012-cdef34567890",
+          "Name": "Winter Race 1",
+          "HandicapType": "OneDesign",
+          "HandicapSystem": "Portsmouth",
+          "ScoringSystem": "LowPoint",
+          "IsMedalRace": false,
+          "IncludeOverall": true,
+          "Classes": []
+        },
+        {
+          "Id": "f8f9a0b1-2345-6789-0123-def456789012",
+          "Name": "Winter Race 2",
+          "HandicapType": "OneDesign",
+          "HandicapSystem": "Portsmouth",
+          "ScoringSystem": "LowPoint",
+          "IsMedalRace": false,
+          "IncludeOverall": true,
+          "Classes": []
+        }
+      ],
+      "TeamMembers": [
+        "official-user-001"
+      ],
+      "IsPublic": false,
+      "AllowedUsers": [
+        "user-001",
+        "organiser-user-001"
+      ],
+      "DefaultScoringSystem": "LowPoint",
+      "IncludeOverallByDefault": true,
+      "DefaultClasses": [],
+      "RacesBeforeDiscards": 1,
+      "NumberOfDiscards": 0
+    },
+    {
+      "Id": "g9g0a1b2-3456-7890-1234-ef5678901234",
+      "Name": "IRC Championship 2025",
+      "Races": [
+        {
+          "Id": "h0h1b2c3-4567-8901-2345-f67890123456",
+          "Name": "IRC Race 1",
+          "HandicapType": "Open",
+          "HandicapSystem": "IRC",
+          "ScoringSystem": "LowPoint",
+          "IsMedalRace": false,
+          "IncludeOverall": true,
+          "Classes": [
+            {
+              "Id": "i1i2c3d4-5678-9012-3456-g78901234567",
+              "Name": "IRC Racing",
+              "ScoringMethod": "IRC",
+              "Rating": 1.035
+            }
+          ]
+        },
+        {
+          "Id": "j2j3d4e5-6789-0123-4567-h89012345678",
+          "Name": "IRC Race 2",
+          "HandicapType": "Open",
+          "HandicapSystem": "IRC",
+          "ScoringSystem": "LowPoint",
+          "IsMedalRace": true,
+          "IncludeOverall": true,
+          "Classes": [
+            {
+              "Id": "i1i2c3d4-5678-9012-3456-g78901234567",
+              "Name": "IRC Racing",
+              "ScoringMethod": "IRC",
+              "Rating": 1.035
+            }
+          ]
+        }
+      ],
+      "TeamMembers": [
+        "organiser-user-001",
+        "official-user-001"
+      ],
+      "IsPublic": true,
+      "AllowedUsers": [],
+      "DefaultScoringSystem": "LowPoint",
+      "IncludeOverallByDefault": true,
+      "DefaultClasses": [],
+      "RacesBeforeDiscards": 1,
+      "NumberOfDiscards": 1
+    }
+  ]
+}

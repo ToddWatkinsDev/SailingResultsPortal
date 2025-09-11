@@ -1,32 +1,231 @@
-﻿<!DOCTYPE html>
+﻿<!-- TODO: Add official branding input system for custom logos, colors, and styling -->
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Sailing Results Portal</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .nav-link { transition: all 0.2s ease; }
+        .nav-link:hover { transform: translateY(-1px); }
+        .hero-pattern {
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
 
-    <header class="bg-blue-800 text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="/" class="font-bold text-xl hover:underline">Sailing Results Portal</a>
+    <!-- Modern Navigation -->
+    <nav class="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center space-x-3 group">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                            <i data-lucide="sailboat" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-xl text-gray-900 group-hover:text-blue-600 transition-colors">Sailing Portal</span>
+                            <div class="text-xs text-gray-500 -mt-1">Results & Management</div>
+                        </div>
+                    </a>
+                </div>
 
-            <nav class="space-x-4">
-                <a href="/Events" class="hover:underline">Events</a>
-            </nav>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="/" class="nav-link px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium transition-all">
+                        <i data-lucide="home" class="w-4 h-4 inline mr-1"></i>
+                        Home
+                    </a>
+                    <a href="/Events" class="nav-link px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium transition-all">
+                        <i data-lucide="calendar" class="w-4 h-4 inline mr-1"></i>
+                        Events
+                    </a>
+                    @if (User?.Identity?.IsAuthenticated ?? false)
+                    {
+                        <a href="/Events" class="nav-link px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium transition-all">
+                            <i data-lucide="settings" class="w-4 h-4 inline mr-1"></i>
+                            Manage
+                        </a>
+                        <a href="/Results" class="nav-link px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium transition-all">
+                            <i data-lucide="bar-chart-3" class="w-4 h-4 inline mr-1"></i>
+                            Results
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="/Results/Public" class="nav-link px-4 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium transition-all">
+                            <i data-lucide="eye" class="w-4 h-4 inline mr-1"></i>
+                            View Results
+                        </a>
+                    }
+                </div>
 
-            <partial name="_LoginPartial" />
+                <div class="flex items-center">
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
         </div>
-    </header>
+    </nav>
 
-    <main class="container mx-auto p-4 flex-grow">
+    <!-- Hero Section for Home Page -->
+    @if (ViewData["Title"]?.ToString() == "Home")
+    {
+        <div class="gradient-bg hero-pattern text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="text-center">
+                    <div class="mb-8">
+                        <i data-lucide="sailboat" class="w-20 h-20 mx-auto mb-6 opacity-90"></i>
+                        <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                            Sailing Results Portal
+                        </h1>
+                        <p class="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto leading-relaxed">
+                            Professional sailing event management with advanced scoring systems,
+                            comprehensive results tracking, and beautiful visualizations.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap justify-center gap-4 mb-12">
+                        <a href="/Results/Public" class="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold hover:bg-gray-50 hover:scale-105 transition-all duration-200 shadow-xl inline-flex items-center">
+                            <i data-lucide="eye" class="w-6 h-6 mr-3"></i>
+                            View Results
+                        </a>
+                        @if (!(User?.Identity?.IsAuthenticated ?? false))
+                        {
+                            <a href="/Account/Register" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 hover:scale-105 transition-all duration-200 shadow-xl inline-flex items-center">
+                                <i data-lucide="user-plus" class="w-6 h-6 mr-3"></i>
+                                Get Started
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="/Events" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 hover:scale-105 transition-all duration-200 shadow-xl inline-flex items-center">
+                                <i data-lucide="plus" class="w-6 h-6 mr-3"></i>
+                                Create Event
+                            </a>
+                        }
+                    </div>
+
+                    <!-- Feature Highlights -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                            <i data-lucide="trophy" class="w-12 h-12 text-yellow-300 mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">Advanced Scoring</h3>
+                            <p class="opacity-90">Low Point, High Point, and Medal Race scoring systems</p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                            <i data-lucide="bar-chart-3" class="w-12 h-12 text-green-300 mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">Real-time Results</h3>
+                            <p class="opacity-90">Live updates and comprehensive race-by-race breakdowns</p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                            <i data-lucide="users" class="w-12 h-12 text-purple-300 mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">Multi-Class Support</h3>
+                            <p class="opacity-90">Handle complex events with multiple boat classes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Main Content -->
+    <main class="flex-grow">
         @RenderBody()
     </main>
 
-    <footer class="bg-blue-800 text-white text-center p-4 mt-8">
-        &copy; @DateTime.Now.Year Sailing Results Portal
+    <!-- Modern Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                            <i data-lucide="sailboat" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <span class="font-bold text-xl">Sailing Portal</span>
+                    </div>
+                    <p class="text-gray-400 mb-4 max-w-md">
+                        Professional sailing event management platform with advanced scoring,
+                        comprehensive results tracking, and beautiful visualizations.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-white mb-4">Features</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Advanced Scoring</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Real-time Results</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Multi-Class Support</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Export Options</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-white mb-4">Support</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Documentation</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">
+                    © @DateTime.Now.Year Sailing Results Portal. All rights reserved.
+                </p>
+                <div class="flex items-center space-x-4 mt-4 md:mt-0">
+                    <span class="text-gray-400 text-sm">Powered by</span>
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="zap" class="w-4 h-4 text-yellow-400"></i>
+                        <span class="font-semibold text-white">ASP.NET Core</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+
+    <!-- Cache Manager Script -->
+    <script src="~/js/cache-manager.js"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

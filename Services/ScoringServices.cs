@@ -1,4 +1,5 @@
 using System;
+using SailingResultsPortal.Models;
 
 namespace SailingResultsPortal.Services
 {
@@ -35,6 +36,89 @@ namespace SailingResultsPortal.Services
 
             double correctedSeconds = elapsedTime.TotalSeconds * ytcRating;
             return TimeSpan.FromSeconds(correctedSeconds);
+        }
+
+        // Points calculation methods
+        public static int CalculatePoints(int position, int totalBoats, string scoringSystem, bool isMedalRace = false)
+        {
+            int basePoints;
+
+            switch (scoringSystem.ToLower())
+            {
+                case "lowpoint":
+                    basePoints = position;
+                    break;
+                case "highpoint":
+                    basePoints = totalBoats - position + 1;
+                    break;
+                default:
+                    basePoints = position; // Default to low point
+                    break;
+            }
+
+            // Double points for medal races
+            if (isMedalRace)
+            {
+                basePoints *= 2;
+            }
+
+            return basePoints;
+        }
+
+        // Handle DNS/DNC/DNF/RET points
+        public static int CalculatePenaltyPoints(string status, int totalBoats, string scoringSystem)
+        {
+            switch (status?.ToUpper())
+            {
+                case "DNS": // Did Not Start
+                case "DNC": // Did Not Compete
+                    return scoringSystem.ToLower() == "highpoint" ? 0 : totalBoats + 1;
+                case "DNF": // Did Not Finish
+                case "RET": // Retired
+                    return scoringSystem.ToLower() == "highpoint" ? 1 : totalBoats + 1;
+                default:
+                    return 0; // No penalty
+            }
+        }
+
+        // Calculate points for all results in a race
+        public static void CalculateRacePoints(List<Result> raceResults, Race race)
+        {
+            var finishedBoats = raceResults.Where(r => r.Status == null).OrderBy(r => r.CorrectedTime).ToList();
+            var totalBoats = raceResults.Count;
+
+            foreach (var result in raceResults)
+            {
+                if (result.Status != null)
+                {
+                    // Handle penalty cases
+                    result.Points = CalculatePenaltyPoints(result.Status, totalBoats, race.ScoringSystem);
+                }
+                else
+                {
+                    // Find position among finished boats
+                    var position = finishedBoats.FindIndex(r => r.Id == result.Id) + 1;
+                    result.Points = CalculatePoints(position, finishedBoats.Count, race.ScoringSystem, race.IsMedalRace);
+                }
+            }
+        }
+
+        // Calculate overall points for a sailor with discards applied
+        public static int CalculateOverallPointsWithDiscards(List<int> racePoints, int racesBeforeDiscards, int numberOfDiscards)
+        {
+            if (racesBeforeDiscards == 0 || numberOfDiscards == 0 || racePoints.Count <= racesBeforeDiscards)
+            {
+                // No discards or not enough races yet
+                return racePoints.Sum();
+            }
+
+            // Sort points in descending order (worst first)
+            var sortedPoints = racePoints.OrderByDescending(p => p).ToList();
+
+            // Discard the worst races
+            var pointsToUse = sortedPoints.Skip(numberOfDiscards).ToList();
+
+            return pointsToUse.Sum();
         }
     }
 }

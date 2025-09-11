@@ -1,0 +1,443 @@
+================================================================================
+SAILING RESULTS PORTAL - COMPREHENSIVE FILE EXPLANATIONS
+================================================================================
+Last Updated: 2025-09-10
+Project: ASP.NET Core MVC Sailing Results Management System
+
+================================================================================
+CORE APPLICATION FILES
+================================================================================
+
+Program.cs:
+--------------------------------------------------------------------------------
+Main entry point for the ASP.NET Core application. Responsible for creating and
+running the web host using the default host builder pattern. Configures the
+application to use the Startup class for service registration and middleware
+configuration. This file follows the standard .NET Core console application
+pattern and handles the application lifecycle.
+
+Startup.cs:
+--------------------------------------------------------------------------------
+Configures the ASP.NET Core application services and request pipeline. Handles
+dependency injection registration, authentication setup (cookie-based), role-based
+authorization policies, security headers, response compression, and routing
+configuration. Sets up the MVC framework with controllers and views, and
+configures different middleware for development vs production environments.
+
+================================================================================
+CONTROLLERS (MVC PATTERN)
+================================================================================
+
+Controllers/AccountController.cs:
+--------------------------------------------------------------------------------
+Handles user authentication and account management. Implements login/logout
+functionality using ASP.NET Core Identity with cookie-based authentication.
+Includes a backdoor login for administrative access. Manages user registration
+with password hashing and role assignment. Supports multiple user roles:
+Sudo, Organiser, Official, and User with appropriate authorization levels.
+
+Controllers/EventsController.cs:
+--------------------------------------------------------------------------------
+Manages CRUD operations for sailing events, races, and classes. Implements
+role-based authorization requiring Sudo or Organiser roles for modifications.
+Handles complex event structures with nested races and classes. Supports team
+management for event organizers and privacy controls for public/private events.
+Includes bulk operations and relationship management between events, races,
+and classes.
+
+Controllers/HomeController.cs:
+--------------------------------------------------------------------------------
+Provides basic application pages including the landing page, privacy policy,
+and error handling. The Index action displays the main application homepage
+with feature highlights and navigation options. Includes standard ASP.NET Core
+error handling with detailed request information for debugging.
+
+Controllers/ResultsController.cs:
+--------------------------------------------------------------------------------
+Core controller for managing race results and scoring. Handles individual result
+creation/editing with automatic handicap calculations (Portsmouth, IRC, YTC).
+Implements bulk upload functionality for mass data import with JSON validation.
+Provides comprehensive export capabilities (CSV/JSON) and advanced filtering.
+Manages position calculations, points assignment, and discard rules for overall
+standings. Supports both public and authenticated result views.
+
+Controllers/CacheController.cs:
+--------------------------------------------------------------------------------
+Manages client-side cache validation for data files. Provides timestamp endpoints
+for events and results data to enable efficient cache invalidation. Supports
+real-time updates by comparing client-side timestamps with server timestamps.
+Implements lightweight API endpoints for cache management without full data
+transfer.
+
+================================================================================
+MODELS (DATA STRUCTURES)
+================================================================================
+
+Models/Event.cs:
+--------------------------------------------------------------------------------
+Defines the core Event data model representing a sailing regatta or series.
+Contains nested Race collection, team member management, privacy settings,
+and discard configuration. Includes Class model for boat classifications with
+scoring methods and handicap ratings. Supports complex event hierarchies and
+access control.
+
+Models/Race.cs:
+--------------------------------------------------------------------------------
+Represents individual races within events. Defines handicap type (Open/OneDesign)
+and handicap system (Portsmouth/IRC/YTC). Includes scoring system configuration,
+medal race settings, and classes collection. Manages race-specific settings and
+relationships with parent events and child classes.
+
+Models/Result.cs:
+--------------------------------------------------------------------------------
+Stores individual race results with timing data, positioning, and handicap
+information. Contains corrected time calculations, points assignment, and
+audit trail (uploaded/edited by, timestamps). Supports multiple status codes
+(DNS/DNC/DNF/RET) and handicap number storage. Includes validation methods
+for data integrity.
+
+Models/User.cs:
+--------------------------------------------------------------------------------
+User authentication and authorization model. Stores username, email, password
+hash, and role assignments. Supports role-based access control with hierarchical
+permissions (Sudo > Organiser > Official > User). Includes account creation
+timestamps and basic user profile information.
+
+Models/HandicapFilter.cs:
+--------------------------------------------------------------------------------
+Advanced filtering model for handicap-based result queries. Supports complex
+filter expressions like "Laser<1000PY" or "Cruiser between 1.0 and 1.2 IRC".
+Parses filter strings into structured queries with class names, inequality
+operators, value ranges, and handicap types.
+
+Models/BulkResultDto.cs:
+--------------------------------------------------------------------------------
+Data transfer object for bulk result uploads. Defines the JSON schema for
+mass import operations. Includes validation attributes and mapping to Result
+model. Supports flexible data import with error handling and validation
+feedback.
+
+Models/ErrorViewModel.cs:
+--------------------------------------------------------------------------------
+Standard ASP.NET Core error page model. Contains request ID information and
+conditional display logic. Provides debugging information for development
+environments while maintaining security in production.
+
+================================================================================
+SERVICES (BUSINESS LOGIC)
+================================================================================
+
+Services/ScoringServices.cs:
+--------------------------------------------------------------------------------
+Static service class containing all handicap calculation and scoring logic.
+Implements Portsmouth Yardstick, IRC, and YTC corrected time calculations.
+Handles points assignment for different scoring systems (Low Point/High Point).
+Manages penalty points for DNS/DNC/DNF/RET statuses. Calculates overall standings
+with discard rules and position ordering. Provides race-level point calculations
+and comprehensive scoring algorithms.
+
+Services/UserService.cs:
+--------------------------------------------------------------------------------
+User management service with authentication and account operations. Implements
+secure password hashing using SHA256. Handles user registration with uniqueness
+validation. Provides user lookup by username and credential validation.
+Manages user data persistence to JSON storage with async operations.
+
+Services/HandicapFilterParser.cs:
+--------------------------------------------------------------------------------
+Specialized parser for handicap filter expressions. Converts human-readable
+filter strings into structured HandicapFilter objects. Supports various
+operators (=, <, >, between) and handicap types (PY, IRC, YTC). Includes
+regex-based parsing with error handling and validation.
+
+================================================================================
+HELPERS (UTILITY CLASSES)
+================================================================================
+
+Helpers/FileStorageHelper.cs:
+--------------------------------------------------------------------------------
+Comprehensive file I/O utility for JSON data persistence. Implements atomic
+write operations to prevent data corruption. Provides timestamp-based caching
+with automatic invalidation. Includes custom TimeSpan JSON converter for
+proper serialization. Handles error recovery and logging for robust data
+operations. Supports both simple and timestamp-wrapped data storage.
+
+================================================================================
+VIEWS (RAZOR TEMPLATES)
+================================================================================
+
+Views/_Layout.cshtml:
+--------------------------------------------------------------------------------
+Master layout template defining the application's HTML structure. Includes
+responsive navigation with role-based menu items, hero section for homepage,
+and modern footer. Implements consistent styling with Tailwind CSS and
+Lucide icons. Contains JavaScript initialization for interactive elements.
+
+Views/_LoginPartial.cshtml:
+--------------------------------------------------------------------------------
+Reusable partial view for authentication status display. Shows current user
+information and role. Provides login/logout buttons with appropriate redirects.
+Integrates with ASP.NET Core authentication system.
+
+Views/_ViewImports.cshtml:
+--------------------------------------------------------------------------------
+Shared Razor directives for all views. Imports necessary namespaces and tag
+helpers. Enables consistent model binding and HTML generation across views.
+
+Views/_ViewStart.cshtml:
+--------------------------------------------------------------------------------
+Specifies the default layout for all views. Ensures consistent page structure
+and shared resources across the application.
+
+Views/Home/Index.cshtml:
+--------------------------------------------------------------------------------
+Simple homepage view that leverages the layout's hero section. Provides basic
+welcome content and navigation to main features.
+
+Views/Account/Login.cshtml:
+--------------------------------------------------------------------------------
+User authentication form with modern styling. Includes client-side validation,
+error message display, and registration link. Implements responsive design
+with gradient backgrounds and professional UI elements.
+
+Views/Account/Register.cshtml:
+--------------------------------------------------------------------------------
+User registration form with role selection. Includes password requirements,
+email validation, and comprehensive error handling. Provides login link for
+existing users.
+
+Views/Events/Index.cshtml:
+--------------------------------------------------------------------------------
+Events listing page with management actions. Displays all events with race
+counts and edit capabilities. Includes cache timestamp integration for
+real-time updates.
+
+Views/Events/Create.cshtml:
+--------------------------------------------------------------------------------
+Event creation form with discard settings. Includes validation and user-friendly
+labels. Provides cancel navigation back to events list.
+
+Views/Events/Edit.cshtml:
+--------------------------------------------------------------------------------
+Event editing form with pre-populated values. Maintains existing settings while
+allowing modifications. Includes proper form validation and navigation.
+
+Views/Events/Races.cshtml:
+--------------------------------------------------------------------------------
+Race management interface for specific events. Displays all races with handicap
+information and management options. Includes privacy controls and team
+management access. Provides bulk upload integration for results.
+
+Views/Events/CreateRace.cshtml:
+--------------------------------------------------------------------------------
+Race creation form with comprehensive handicap settings. Includes dropdowns
+for handicap systems, scoring methods, and medal race configuration.
+Provides sensible defaults for new races.
+
+Views/Events/EditRace.cshtml:
+--------------------------------------------------------------------------------
+Race editing form with existing values pre-populated. Allows modification of
+all race properties including handicap settings and scoring configuration.
+
+Views/Events/Classes.cshtml:
+--------------------------------------------------------------------------------
+Class management interface for specific races. Displays all classes with
+scoring methods and ratings. Provides CRUD operations for class management.
+Includes result creation links for each class.
+
+Views/Events/CreateClass.cshtml:
+--------------------------------------------------------------------------------
+Class creation form with scoring method selection. Includes Portsmouth, IRC,
+and YTC options with appropriate rating fields. Provides validation and
+user guidance.
+
+Views/Events/Team.cshtml:
+--------------------------------------------------------------------------------
+Team member management interface. Displays current team members and available
+users. Provides add/remove functionality for event organizers. Supports
+role-based access control for team management.
+
+Views/Results/Index.cshtml:
+--------------------------------------------------------------------------------
+Main results display page with comprehensive functionality. Includes filtering,
+bulk operations, export options, and navigation to related views. Displays
+results grouped by handicap system and class.
+
+Views/Results/Create.cshtml:
+--------------------------------------------------------------------------------
+Individual result creation form. Includes handicap number input for open races,
+status selection, and time input with validation. Provides cancel navigation
+and proper form handling.
+
+Views/Results/Edit.cshtml:
+--------------------------------------------------------------------------------
+Result editing form with existing values. Allows modification of all result
+properties including recalculated corrected times. Maintains data integrity
+during updates.
+
+Views/Results/BulkUpload.cshtml:
+--------------------------------------------------------------------------------
+Bulk upload interface for mass result import. Includes JSON template download,
+validation feedback, and comprehensive error reporting. Supports both event-
+level and race-specific uploads.
+
+Views/Results/EventList.cshtml:
+--------------------------------------------------------------------------------
+Public events listing for non-authenticated users. Displays available public
+events with result counts and navigation to public result views. Implements
+clean, accessible design for public access.
+
+Views/Results/Overall.cshtml:
+--------------------------------------------------------------------------------
+Overall event standings with discard calculations. Displays final positions
+with race-by-race breakdowns. Includes export functionality and scoring
+information. Supports both authenticated and public access.
+
+Views/Results/Overview.cshtml:
+--------------------------------------------------------------------------------
+Comprehensive event overview with class-by-class breakdowns. Shows race
+results, overall standings, and detailed performance metrics. Includes
+advanced visualizations and export capabilities.
+
+Views/Shared/Error.cshtml:
+--------------------------------------------------------------------------------
+Standard error page with request details. Provides debugging information in
+development and user-friendly messages in production. Includes navigation
+back to home page.
+
+================================================================================
+STATIC ASSETS
+================================================================================
+
+wwwroot/css/site.css:
+--------------------------------------------------------------------------------
+Custom CSS styles supplementing the Tailwind CSS framework. Contains application-
+specific styling, responsive design adjustments, and visual enhancements.
+Includes custom classes for gradients, animations, and component styling.
+
+wwwroot/js/site.js:
+--------------------------------------------------------------------------------
+General-purpose JavaScript utilities for the application. Contains common
+functions, DOM manipulation helpers, and cross-browser compatibility fixes.
+Provides foundation for interactive features and user experience enhancements.
+
+wwwroot/js/cache-manager.js:
+--------------------------------------------------------------------------------
+Client-side cache management system. Handles timestamp checking for data files,
+automatic cache invalidation, and real-time updates. Implements polling
+mechanisms for cache validation and provides seamless data synchronization
+between client and server.
+
+================================================================================
+DATA STORAGE
+================================================================================
+
+Data/events.json:
+--------------------------------------------------------------------------------
+JSON file storing all event data with timestamp wrapper for cache management.
+Contains complete event structures including races, classes, team members,
+and privacy settings. Supports complex nested relationships and metadata
+for efficient data retrieval and caching.
+
+Data/results.json:
+--------------------------------------------------------------------------------
+JSON file storing all race results with timestamp wrapper. Contains individual
+result records with timing data, handicap calculations, and audit information.
+Supports bulk operations and comprehensive result tracking across all events.
+
+Data/users.json:
+--------------------------------------------------------------------------------
+JSON file storing user authentication data. Contains user accounts with hashed
+passwords, roles, and profile information. Supports role-based access control
+and user management operations.
+
+================================================================================
+CONFIGURATION
+================================================================================
+
+appsettings.json:
+--------------------------------------------------------------------------------
+Main application configuration file. Contains database connection strings,
+logging configuration, and application-specific settings. Defines environment-
+specific parameters and external service configurations.
+
+appsettings.Development.json:
+--------------------------------------------------------------------------------
+Development-specific configuration overrides. Contains settings specific to
+development environment including debug options, local service endpoints,
+and development-friendly configurations.
+
+Properties/launchSettings.json:
+--------------------------------------------------------------------------------
+Launch profile configuration for different environments. Defines how the
+application starts in development, staging, and production. Includes port
+configurations, environment variables, and launch options.
+
+================================================================================
+PROJECT STRUCTURE
+================================================================================
+
+SailingResultsPortal.csproj:
+--------------------------------------------------------------------------------
+.NET project file defining build configuration, dependencies, and project
+metadata. Specifies target framework (.NET 8.0), package references, build
+targets, and project properties. Manages NuGet package dependencies and
+compilation settings.
+
+SailingResultsPortal.sln:
+--------------------------------------------------------------------------------
+Visual Studio solution file grouping the project with related components.
+Provides solution-level configuration and build settings. Enables multi-
+project development and dependency management.
+
+README:
+--------------------------------------------------------------------------------
+Project documentation file containing setup instructions, usage guidelines,
+and development information. Includes installation steps, configuration
+options, and contribution guidelines for developers.
+
+LICENSE:
+--------------------------------------------------------------------------------
+Project license file defining usage rights and restrictions. Specifies the
+open-source license terms for the project and its components.
+
+================================================================================
+BUILD ARTIFACTS
+================================================================================
+
+bin/Debug/net8.0/:
+--------------------------------------------------------------------------------
+Compiled application binaries and runtime dependencies. Contains the executable
+assembly, referenced libraries, configuration files, and runtime components
+necessary for application execution.
+
+obj/:
+--------------------------------------------------------------------------------
+Intermediate build files and compilation cache. Stores temporary files generated
+during the build process including compiled objects, resource files, and
+build metadata. Can be safely deleted to force a clean rebuild.
+
+================================================================================
+VERSION CONTROL
+================================================================================
+
+.gitattributes:
+--------------------------------------------------------------------------------
+Git configuration file specifying how different file types should be handled
+by Git. Defines line ending normalization, merge strategies, and file type
+specifications for consistent version control behavior.
+
+.gitignore:
+--------------------------------------------------------------------------------
+Git ignore rules file specifying files and directories that should not be
+tracked by version control. Excludes build artifacts, user-specific files,
+sensitive data, and temporary files from the repository.
+
+================================================================================
+ASSETS
+================================================================================
+
+img_1757518835443.png:
+--------------------------------------------------------------------------------
+Project-related image asset. May contain diagrams, screenshots, or visual
+documentation for the sailing results portal project.
